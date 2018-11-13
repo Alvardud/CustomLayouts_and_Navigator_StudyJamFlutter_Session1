@@ -1,118 +1,16 @@
-import 'package:custom_layouts/Chat.dart';
+import 'package:custom_layouts/VentanaChats.dart';
+import 'package:custom_layouts/VentanaEstados.dart';
+import 'package:custom_layouts/VentanaLlamadas.dart';
 import 'package:flutter/material.dart';
 
+
+//constructor de la App
 void main()=> runApp(LayoutPrincipal());
 
-//metodos
-/*
-class Contacto extends StatelessWidget{
-
-  String _mensaje='';
-  String _emisor='';
-  String _horaDeLlegada='';
-
-  @override
-
-  Contacto(String m, String e, String h){
-    _mensaje=m;
-    _emisor=e;
-    _horaDeLlegada=h;
-  }
-
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      padding: EdgeInsets.only(top: 15.0,bottom: 3.5,left: 10.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                width: 200.0,
-                child: Text(_emisor,style: TextStyle(color:Colors.black,fontSize: 20.0),),),
-              Text(_horaDeLlegada,style: TextStyle(color:Colors.black54),),
-            ],
-          ),
-          Container(
-            width: 260.0,
-            child:Text(_mensaje,style: TextStyle(color: Colors.black54),textAlign: TextAlign.left,),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class elementoLista extends StatelessWidget{
-
-  String _mensaje='';
-  String _emisor='';
-  String _horaDeLlegada='';
-  Color _colorImagen;
-  Widget _chat;
-
-  @override
-
-  elementoLista(String m, String e, String h, Color c){
-    _mensaje=m;
-    _emisor=e;
-    _horaDeLlegada=h;
-    _colorImagen=c;
-  }
-
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      height:65.0,
-        width: 300.0,
-        child: InkWell(
-          child: Row(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top:5.0,bottom: 5.0),
-                width: 50.0,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  color:_colorImagen,
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-              ),
-              Contacto(_mensaje,_emisor,_horaDeLlegada),
-            ],
-          ),
-          onTap: (){
-            _chat= new Chat(_emisor);
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context)=> _chat,
-            ));
-          },
-        ),
-    );
-  }
-}
-*/
-
-class ContenedorPrincipal extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15.0,vertical: 10.0),
-      child: ListView(
-        children: <Widget>[
-          /*elementoLista("Hola","Roman","11:00 AM",Colors.cyanAccent),
-          elementoLista("Estoy en el study jam","John","10:45 AM",Colors.deepOrange),
-          elementoLista(":D","Ariel","10:00 AM",Colors.deepPurple),
-          elementoLista("Buenos dias","Mama","08:00 AM",Colors.lightGreenAccent),
-          elementoLista("Tengo Sueño","Crush","11:00 PM",Colors.blueGrey)*/
 
 
-        ],
-      ),
-    );
-  }
-}
-
+///Layout donde se implementaran los Widgets
+///este es de clase estateful por el tab bar, este debe tomar diferentes estados
 class Layout extends StatefulWidget{
   @override
   _tabState createState()=>_tabState();
@@ -120,8 +18,11 @@ class Layout extends StatefulWidget{
 
 class _tabState extends State<Layout>with SingleTickerProviderStateMixin{
   @override
+  //el controller nos ayudara a tener el puntero de los tabs
   TabController _controller;
 
+
+  //estado inicial de nuestro controlador de tabs
   void initState(){
     _controller = new TabController(length: 3,vsync: this);
   }
@@ -137,21 +38,44 @@ class _tabState extends State<Layout>with SingleTickerProviderStateMixin{
             color: Colors.white
           ),
         ),
+        ///los actions son elementos de los tabs bar que se acomodan del lado derecho del AppBar
+        ///en este caso utilizaremos iconos
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search, color: Colors.white,)),
           IconButton(icon: Icon(Icons.more_vert, color: Colors.white,))
         ],
-        bottom: TabBar(controller: _controller,tabs: <Widget>[
-          Tab(child: Text('CHATS',style: TextStyle(color: Colors.white),),),
-          Tab(child: Text('STATUS',style: TextStyle(color: Colors.white),),),
-          Tab(child: Text('CALLS',style: TextStyle(color: Colors.white),),)
+        //Tab bar que se situara debajo del AppBar
+        bottom: TabBar(
+            indicatorColor: Colors.white,controller: _controller,
+
+            //Tabs (titulos, solo textos) del tab Bar en este caso 3
+            tabs: <Widget>[
+              Tab(child: Text('CHATS',style: TextStyle(color: Colors.white),),),
+              Tab(child: Text('ESTADOS',style: TextStyle(color: Colors.white),),),
+              Tab(child: Text('LLAMADAS',style: TextStyle(color: Colors.white),),)
         ]),
       ),
-      body: ContenedorPrincipal(),
+
+      ///implementacion de los tabs(layouts), donde estara nuestro contenido de la App
+      /// ambos (TabBar como TabBarView deben tener el mismo controlador, de esta
+      /// manera controlamos que ambos tengan el mismo estado)
+      body: TabBarView(
+          controller: _controller,
+          children: <Widget>[
+
+            ///Solo el layout de chats sera creado y pensado
+            ///los demas layouts (Estados y Llamadas), tiene la misma forma
+            ///tanto en sus estructuras como en sus widgets, solo tienen pequeñas
+            ///variaciones
+            new VentanaChats(),
+            new VentanaEstados(), //esta ventana no funciona
+            new VentanaLlamadas(),
+          ]),
     );
   }
 }
 
+//layout donde se creara toda la App
 class LayoutPrincipal extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
